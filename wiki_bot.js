@@ -93,7 +93,7 @@ exec(command,function(err, stdout, stderr) {
 // Update local wiki 
 exec('git -C "'+local_wiki_path+'" pull',function(err, stdout, stderr) {
     if(err) {
-        bot.reply(message, message_connection_failed[lang]);
+        bot.reply(message, message_connection_failed[lang]+" "+server_wiki_path);
     }
 });
 
@@ -111,7 +111,7 @@ controller.hears(["(.*)"],
         command += " | less -R"   // print raw control characters
         console.log('WIKI EXEC COMMAND:', command)
         
-        bot.reply(message, message_got_it[lang]+' '+server_wiki_path)
+        bot.reply(message, message_got_it[lang])
         
         // Update local wiki 
         // (note that exec doesnt wait to be done... but we're updating wiki for next time)
@@ -119,7 +119,7 @@ controller.hears(["(.*)"],
         exec('git -C "'+local_wiki_path+'" pull',function(err, stdout, stderr) {
             if(err) {
                 bot.reply(message, message_connection_failed[lang]+" "+server_wiki_path);
-                console.log('DEBUG','couldnt git pull wiki')
+                console.log('DEBUG','couldnt git pull wiki from '+server_wiki_path)
             }
         });
         
