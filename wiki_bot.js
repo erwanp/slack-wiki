@@ -37,7 +37,7 @@ var os = require('os');
 // Interface messages (bilangual, because I want my bot to be a French-speaker
 // but not everyone probably does...)
 
-const lang = 'en'
+const lang = 'fr'
 
 var message_got_it = {
     'fr': "Je regarde sur le Wiki", 
@@ -87,6 +87,8 @@ exec(command,function(err, stdout, stderr) {
     } else {
         server_wiki_path = stdout.replace('.git','/') 
         server_wiki_path = server_wiki_path.replace(/^\s+|\s+$/g, '');  // trim
+        var gitregex = 'git@(.*?):(.*?).wiki/';    // in case format was git
+        server_wiki_path = server_wiki_path.replace(new RegExp(gitregex, 'g'), "https://$1/$2/wikis/");
     }
 });
 
@@ -152,8 +154,9 @@ controller.hears(["(.*)"],
 
                     while (match = re.exec(lines)) {
                   
-                        // Add path to Markdown files 
-                        var file = server_wiki_path+match[1]
+                        // Replace markdown files with full path 
+                        var file = match[1].replace('.md','')
+                        var file = '<'+server_wiki_path+file+'|'+file+'>'
                         
                         var value = match[2]
                         if (!(file in results)) {
