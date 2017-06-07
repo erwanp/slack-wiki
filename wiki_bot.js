@@ -37,7 +37,7 @@ var os = require('os');
 // Interface messages (bilangual, because I want my bot to be a French-speaker
 // but not everyone probably does...)
 
-const lang = 'fr'
+const lang = 'en'
 
 var message_got_it = {
     'fr': "Je regarde sur le Wiki", 
@@ -83,7 +83,7 @@ const command = 'git -C "'+local_wiki_path+'" remote get-url origin'
 console.log('WIKI GET ORIGIN:', command)  
 exec(command,function(err, stdout, stderr) {
     if(err) {
-        bot.reply(message, message_host_not_found[lang]);
+        console.log('DEBUG','Host not found: '+local_wiki_path);
     } else {
         server_wiki_path = stdout.replace('.git','/') 
         server_wiki_path = server_wiki_path.replace(/^\s+|\s+$/g, '');  // trim
@@ -95,7 +95,7 @@ exec(command,function(err, stdout, stderr) {
 // Update local wiki 
 exec('git -C "'+local_wiki_path+'" pull',function(err, stdout, stderr) {
     if(err) {
-        bot.reply(message, message_connection_failed[lang]+" "+server_wiki_path);
+        console.log('DEBUG', 'connection to server failed: '+server_wiki_path);
     }
 });
 
@@ -111,7 +111,7 @@ controller.hears(["(.*)"],
         command += 'grep --color=always -in --all-match -e '+what.split(' ').join(' -e ')
         command += " -- *.md"   // filter on markdown files 
         command += " | less -R"   // print raw control characters
-        console.log('WIKI EXEC COMMAND:', command)
+        //console.log('WIKI EXEC COMMAND:', command)   //debug
         
         bot.reply(message, message_got_it[lang])
         
