@@ -108,7 +108,7 @@ controller.hears(["(.*)"],
         // Command to look up wiki 
         var command = 'git -C "'+local_wiki_path+'" '
         command += '-c color.grep.match=red '    // force grep to highlight found text in red (we use that later)
-        command += 'grep --color=always -in --all-match -e '+what.split(' ').join(' -e ')
+        command += 'grep --color=always -in -e '+what.split(' ').join(' --and -e ')
         command += " -- *.md"   // filter on markdown files 
         command += " | less -R"   // print raw control characters
         //console.log('WIKI EXEC COMMAND:', command)   //debug
